@@ -79,7 +79,9 @@
 
     function populateTable(swapi, index) {
 
-        // $("tbody").innerHTML = ""; // this will clear the table each time.
+
+
+        $("tbody").empty(); // this will clear the table each time.
 
         for (var i in swapi.results[index].characters) {
 
@@ -134,8 +136,9 @@
             ref.send();
 
             
-
-            $("tbody").append(tr.appendChild(tdName));
+            tr.appendChild(tdName);
+            tr.appendChild(tdShips);
+            $("tbody").append(tr);
 
         }
 
