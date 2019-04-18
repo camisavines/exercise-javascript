@@ -7,60 +7,46 @@
 
 (function() {
     
-    $(document).ready(init)
-    
-    function init() {
+    $(document).ready(init('https://swapi.co/api/films/'))
 
-                
+    var reload = 1;
+    
+    function init(link) {
+        
         // Create a request variable and assign a new XMLHttpRequest object to it.
         var request = new XMLHttpRequest()
 
         // Open a new connection, using the GET request on the URL endpoint
-        request.open('GET', 'https://swapi.co/api/films/', true)
+        request.open('GET', link, true)
         request.onload = function() {
             // Begin accessing JSON data here
             var swapi = JSON.parse(this.response);
-            // globalSwapi = JSON.parse(this.response);
             if (request.status >= 200 && request.status < 400) { // not exactly sure why the status need to be between 200 and 400
                 swapi.results.forEach(element => {
                     console.log(element.title);
                 });
-                populateDropdown(swapi);
-                populateTable(swapi);
+                main(swapi);
             } else {
                 console.log("error");
             }
         };
 
         // Then send request
-        request.send()
+        request.send();
+    }
 
+    function main(swapi) {
+        if (reload == 1) {
+            populateDropdown(swapi);
+            reload++;
+            // prevents multiple copies of the titles in the dropdown menu
+        }
 
-        // $("li").click(getCharacters(globalSwapi, this.innerHTML));
-
-        // const dropdownItems = document.getElementsByName("li");
-        // console.log(dropdownItems);
-        // for (var i in dropdownItems) {
-        //     console.log(i);
-        // }
-        // for (var obj in dropdownObject) {
-            // console.log('greetings');
-            // if ($(obj).click()) {
-            //     console.log(this.index);
-            //     getCharacters(globalSwapi, this.href);
-                // get this item's href value and send it to getCharaters()
-                // getCharacter(globalSwapi, hrefVal)
-        //     }
-        // }
-
-
-        // $(".myMenu").innerHTML.click(function() {
-        //     console.log("Something in menu was clicked");
-        //     getCharacters(globalSwapi, this.i);
-        // }); 
-
- 
         
+
+
+
+        populateTable(swapi);
     }
 
 
@@ -77,9 +63,11 @@
             // Set the href to the index of the film in results to reference its characters later.
             // Then set the li tag's inner text to the link
             link.innerHTML = film;
-            console.log(link);
+            // console.log(link);
             link.setAttribute("href", "#");
             link.setAttribute("i", i);
+            // listItem.setAttribute("onclick", "getCharacters()");
+            // console.log(listItem);
             listItem.appendChild(link);
 
             // Then put the line of code in the dropdown
@@ -90,17 +78,43 @@
 
 
     function getCharacters(swapi, index) {
-        // console.log("in get characters with swap and " + index);
+        console.log("in get characters with swap and " + index);
     }
 
-    function populateTable(swapi) {
-        console.log("populateTable");
-        for (var i = 0; i < swapi.results.length; i++) {
-            var currentFilm = swapi.results[i].characters;
-            for (var j in currentFilm) {
+    function populateTable(swapi, index) {
 
-                console.log(currentFilm[j].name);
+        for (var i in swapi.results[index]) {
+            console.log(i.characters);
+        }
 
+        // for (var i = 0; i < swapi.results.length; i++) {
+        //     for (var j = 0; j < swapi.results[i].characters.length; j++) {
+        //         var Person;
+        //         // Create a request variable and assign a new XMLHttpRequest object to it.
+        //         var request = new XMLHttpRequest()
+
+        //         // Open a new connection, using the GET request on the URL endpoint
+        //         request.open('GET', swapi.results[i].characters[j], true)
+        //         request.onload = function() {
+        //             // Begin accessing JSON data here
+        //             var newName = JSON.parse(this.response);
+        //             Person = newName;
+        //             // globalSwapi = JSON.parse(this.response);
+        //             if (request.status >= 200 && request.status < 400) { // not exactly sure why the status need to be between 200 and 400
+        //                 console.log(newName.name);
+        //             } else {
+        //                 console.log("error");
+        //             }
+        //         };
+
+        //         // Then send request
+        //         request.send();
+
+        //         $("tbody").append("<tr><td>"+ Person.name +"</td></tr>")
+
+
+                // console.log(swapi.results[i].characters[j].name);
+                // this is getting undefined each time
 
             }
         }
