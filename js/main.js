@@ -2,7 +2,9 @@
 // HINT: start here: https://swapi.co/api/films/
 
 (function() {
-
+    
+    $(document).ready(init('https://swapi.co/api/films/'))
+    var reload = 1;
     var apiLinks = {
         "films": "https://swapi.co/api/films/",
         "people": "https://swapi.co/api/people/",
@@ -10,12 +12,10 @@
         "species": "https://swapi.co/api/species/",
         "starships": "https://swapi.co/api/starships/",
         "vehicles": "https://swapi.co/api/vehicles/"
-    }
+    };
+
     
-    $(document).ready(init('https://swapi.co/api/films/'))
-    var reload = 1;
-    
-    function init(link) {
+    function init(link) {    
         
         // Create a request variable and assign a new XMLHttpRequest object to it.
         var request = new XMLHttpRequest();
@@ -48,7 +48,7 @@
         }
 
         $("li").mousedown(function() {
-            console.log(this);
+            // console.log(this);
             populateTable(swapi, (this.getAttribute("id")));
         });
 
@@ -79,12 +79,9 @@
 
     function populateTable(swapi, index) {
 
-        console.log("clicked");
-        console.log(index);
-
         // $("tbody").innerHTML = ""; // this will clear the table each time.
 
-        for (var i = 0; i < swapi.results[index].characters.length; i++) {
+        for (var i in swapi.results[index].characters) {
 
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
@@ -93,19 +90,41 @@
             const xIcon = document.createElement('span');
             xIcon.setAttribute("class", "glyphicon glyphicon-remove");
 
-            var person;
-            var ref = new XMLHttpRequest();
-            ref.open("GET", swapi.results[index].characters[i], true);
-            ref.onload = function() {
-                // Begin accessing JSON data here
-                var character = JSON.parse(this.response);
-                person = character;
-                if (ref.status >= 200 && ref.status < 400) { // not exactly sure why the status need to be between 200 and 400
-                    tdName = character.name + " " + a.appendChild(xIcon);
-                    for (var i in character.vehicles) {
-                        console.log("another vehicle");
-                    }
+            var listOfCharacters = swapi.results[index].characters;
+            console.log(listOfCharacters[i]);
 
+            var ref = new XMLHttpRequest();
+            ref.open("GET", listOfCharacters[i], true);
+            ref.onload = function() {
+                var character = JSON.parse(this.response);
+                if (ref.status >= 200 && ref.status < 400) { // not exactly sure why the status need to be between 200 and 400
+                    tdName.innerText = character.name;
+                    if (character.vehicles.length < 1) {
+                        tdShips.innerText = "None";
+                        return;
+                    } else {
+                        for (var j = 0; j < character.vehicles.length; j++) {
+                            var listOfVehicles = character.vehicles;
+                            console.log(listOfVehicles[j]);
+
+                            var ref2 = new XMLHttpRequest();
+                            ref2.open("GET", listOfVehicles[j], true);
+                            ref2.onload = function() {
+                                var vehicle = JSON.parse(this.response);
+                                if (ref2.status >= 200 && ref2.status < 400) {
+                                    if (j != character.vehicles.length - 1) {
+                                        tdShips.innerText += vehicle.name + ",";
+                                    } else {
+                                        tdShips.innerText += vehicle.name;
+                                    }
+                                    console.log(tdShips);
+                                }
+                            };
+
+                            ref2.send();
+
+                        }
+                    }
                 } else {
                     console.log("error");
                 }
@@ -116,44 +135,10 @@
 
             
 
-            tdName = person.name;
-            console.log(tdName);
-
-            $("tbody").append(tr.appendChild(tdName && tdShips));
+            $("tbody").append(tr.appendChild(tdName));
 
         }
 
-        // for (var i = 0; i < swapi.results.length; i++) {
-        //     for (var j = 0; j < swapi.results[i].characters.length; j++) {
-        //         var Person;
-        //         // Create a request variable and assign a new XMLHttpRequest object to it.
-        //         var request = new XMLHttpRequest()
-
-        //         // Open a new connection, using the GET request on the URL endpoint
-        //         request.open('GET', swapi.results[i].characters[j], true)
-        //         request.onload = function() {
-        //             // Begin accessing JSON data here
-        //             var newName = JSON.parse(this.response);
-        //             Person = newName;
-        //             // globalSwapi = JSON.parse(this.response);
-        //             if (request.status >= 200 && request.status < 400) { // not exactly sure why the status need to be between 200 and 400
-        //                 console.log(newName.name);
-        //             } else {
-        //                 console.log("error");
-        //             }
-        //         };
-
-        //         // Then send request
-        //         request.send();
-
-        //         $("tbody").append("<tr><td>"+ Person.name +"</td></tr>")
-
-
-                // console.log(swapi.results[i].characters[j].name);
-                // this is getting undefined each time
-
-        //     }
-        // }
     }
 
 
