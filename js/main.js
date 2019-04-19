@@ -3,50 +3,22 @@
 
 (function() {
     
-    $(document).ready(init('https://swapi.co/api/films/'))
-    var reload = 1;
-    var apiLinks = {
-        "films": "https://swapi.co/api/films/",
-        "people": "https://swapi.co/api/people/",
-        "planets": "https://swapi.co/api/planets/",
-        "species": "https://swapi.co/api/species/",
-        "starships": "https://swapi.co/api/starships/",
-        "vehicles": "https://swapi.co/api/vehicles/"
-    };
-
+    $(document).ready(init())
     
-    function init(link) {    
-        
-        // Create a request variable and assign a new XMLHttpRequest object to it.
-        var request = new XMLHttpRequest();
+    function init() { 
 
-        // Open a new connection, using the GET request on the URL endpoint
-        request.open('GET', link, true)
-        request.onload = function() {
-            // Begin accessing JSON data here
-            var swapi = JSON.parse(this.response);
-            if (request.status >= 200 && request.status < 400) { // not exactly sure why the status need to be between 200 and 400
-                swapi.results.forEach(element => {
-                    console.log(element.title);
-                });
-                main(swapi);
-            } else {
-                console.log("error");
-            }
-        };
+        $.getJSON("https://swapi.co/api/films/", function(result) {
+            main(result);
+        });
 
-        // Then send request
-        request.send();
     }
 
-
+    var reload = 1;
     function main(swapi) {
         if (reload == 1) {
             populateDropdown(swapi);
-            reload++;
-            // prevents multiple copies of the titles in the dropdown menu
+            reload++; // prevents multiple copies of the titles in the dropdown menu
         }
-
         $("li").mousedown(function() {
             // console.log(this);
             populateTable(swapi, (this.getAttribute("id")));
@@ -54,8 +26,8 @@
 
     }
 
-
     function populateDropdown(swapi) {
+        $(".myMenu").empty();
         for (var i = 0; i < swapi.results.length; i++) {
 
             //Make a quick reference to the current film
@@ -79,66 +51,40 @@
 
     function populateTable(swapi, index) {
 
-
-
         $("tbody").empty(); // this will clear the table each time.
-
-        for (var i in swapi.results[index].characters) {
+        
+        for (var i = 0 ; i < swapi.results[index].characters.length; i++){
 
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
             const tdShips = document.createElement('td');
-            const a = document.createElement('a');
-            const xIcon = document.createElement('span');
-            xIcon.setAttribute("class", "glyphicon glyphicon-remove");
+            // const a = document.createElement('a');
+            // a.setAttribute("href", "#");
+            // const xIcon = document.createElement('span');
+            // xIcon.setAttribute("class", "glyphicon glyphicon-remove");
 
             var listOfCharacters = swapi.results[index].characters;
-            console.log(listOfCharacters[i]);
-
-            var ref = new XMLHttpRequest();
-            ref.open("GET", listOfCharacters[i], true);
-            ref.onload = function() {
-                var character = JSON.parse(this.response);
-                if (ref.status >= 200 && ref.status < 400) { // not exactly sure why the status need to be between 200 and 400
-                    tdName.innerText = character.name;
-                    if (character.vehicles.length < 1) {
-                        tdShips.innerText = "None";
-                        return;
-                    } else {
-                        for (var j = 0; j < character.vehicles.length; j++) {
-                            var listOfVehicles = character.vehicles;
-                            console.log(listOfVehicles[j]);
-
-                            var ref2 = new XMLHttpRequest();
-                            ref2.open("GET", listOfVehicles[j], true);
-                            ref2.onload = function() {
-                                var vehicle = JSON.parse(this.response);
-                                if (ref2.status >= 200 && ref2.status < 400) {
-                                    if (j != character.vehicles.length - 1) {
-                                        tdShips.innerText += vehicle.name + ",";
-                                    } else {
-                                        tdShips.innerText += vehicle.name;
-                                    }
-                                    console.log(tdShips);
-                                }
-                            };
-
-                            ref2.send();
-
-                        }
-                    }
+            $.getJSON(listOfCharacters[i], function(character) {
+                tdName.innerText = character.name;
+                if (character.vehicles.length < 1) {
+                    tdShips.innerText = "None";
+                    return;
                 } else {
-                    console.log("error");
+                    for (var j = 0; j < character.vehicles.length; j++) {
+                        var listOfVehicles = character.vehicles;
+                        $.getJSON(listOfVehicles[j], function(vehicle) {
+                            tdShips.innerText += vehicle.name + ",";
+                        })
+                    }
                 }
-            };
-
-            // Then send request
-            ref.send();
-
+            });
             
+            // tdName.append(" <span class='glyphicon glyphicon-remove'></span>");
+            // console.log(tdName);
             tr.appendChild(tdName);
             tr.appendChild(tdShips);
             $("tbody").append(tr);
+
 
         }
 
