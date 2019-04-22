@@ -28,6 +28,7 @@
 
     function populateDropdown(swapi) {
         $(".myMenu").empty();
+        var goodResult = 0;
         for (var i = 0; i < swapi.results.length; i++) {
 
             //Make a quick reference to the current film
@@ -46,7 +47,10 @@
 
             // Then put the line of code in the dropdown
             $(".myMenu").append(listItem);
+            goodResult++;
         }
+
+        return 1;
     }
 
     function populateTable(swapi, index) {
@@ -58,10 +62,10 @@
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
             const tdShips = document.createElement('td');
-            // const a = document.createElement('a');
+            const a = document.createElement('a');
             // a.setAttribute("href", "#");
-            // const xIcon = document.createElement('span');
-            // xIcon.setAttribute("class", "glyphicon glyphicon-remove");
+            const xIcon = document.createElement('span');
+            xIcon.setAttribute("class", "glyphicon glyphicon-remove");
 
             var listOfCharacters = swapi.results[index].characters;
             $.getJSON(listOfCharacters[i], function(character) {
@@ -71,16 +75,21 @@
                     return;
                 } else {
                     for (var j = 0; j < character.vehicles.length; j++) {
+                        var lastOne = (character.vehicles.length - 1);
                         var listOfVehicles = character.vehicles;
                         $.getJSON(listOfVehicles[j], function(vehicle) {
-                            tdShips.innerText += vehicle.name + ",";
-                        })
+                            if (j == lastOne){
+                                console.log("changing the vehicles");
+                                tdShips.innerText += vehicle.name + ", ";
+                            } else {
+                                tdShips.innerText += vehicle.name + ",  ";
+                            }
+                        });
                     }
                 }
+                // tdName.appendChild(a.appendChild(xIcon));
             });
             
-            // tdName.append(" <span class='glyphicon glyphicon-remove'></span>");
-            // console.log(tdName);
             tr.appendChild(tdName);
             tr.appendChild(tdShips);
             $("tbody").append(tr);
@@ -89,6 +98,8 @@
         }
 
     }
+
+    var square = function() {}
 
 
 })();
