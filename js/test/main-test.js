@@ -1,5 +1,6 @@
-function square(x) { return x * x;}
+function square(x) { return x * x; }
 // var square = function() {}
+QUnit.module("../main");
 QUnit.test("square exits", function(assert) {
     assert.ok(square, "Something called square exists");
 });

@@ -50,14 +50,14 @@
             goodResult++;
         }
 
-        return 1;
+        // return 1;
     }
 
     function populateTable(swapi, index) {
 
         $("tbody").empty(); // this will clear the table each time.
         
-        for (var i = 0 ; i < swapi.results[index].characters.length; i++){
+        for (var i = 0 ; i < swapi.results[index].characters.length; i++){ //global error for 'characters'. it cannot be found
 
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
