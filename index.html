@@ -5,15 +5,15 @@
   <title>Future Wonder Programming Exercise</title>
   <!-- Custom -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-git.css">
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="https://swapi.co/api/films/"></script>
-  <script src="js/main.js"></script>
+  <!-- <script src="https://swapi.co/api/films/"></script> -->
   
   <!-- Tests -->
-  <script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
-  <script src="js/test/main-test.js"></script>
+  <!-- <script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
+  <script src="js/test/main-test.js"></script> -->
 
   <!-- Bootstrap Assets -->
   <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
@@ -76,7 +76,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>Luke Skywalker <a href="#" class="glyphicon glyphicon-remove"></a></a></td>
+            <td>Luke Skywalker <a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
             <td>X-Wing, Imperial shuttle</td>
           </tr>
         </tbody>
@@ -84,5 +84,15 @@
 
     </div><!-- /.container -->
 
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+
+    <!-- <div class="container" style="padding-top: 10%;">
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+    </div> -->
+    <script src="js/main.js"></script>
+    <script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
+    <script src="js/test/main-test.js"></script>
   </body>
   </html>
