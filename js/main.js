@@ -56,7 +56,7 @@
     function populateTable(swapi, index) {
 
         $("tbody").empty(); // this will clear the table each time.
-        
+
         for (var i = 0 ; i < swapi.results[index].characters.length; i++){ //global error for 'characters'. it cannot be found
 
             const tr = document.createElement('tr');
@@ -70,19 +70,18 @@
             var listOfCharacters = swapi.results[index].characters;
             $.getJSON(listOfCharacters[i], function(character) {
                 tdName.innerText = character.name;
-                if (character.vehicles.length < 1) {
+                if (character.starships.length < 1) {
                     tdShips.innerText = "None";
                     return;
                 } else {
-                    for (var j = 0; j < character.vehicles.length; j++) {
-                        var lastOne = (character.vehicles.length - 1);
-                        var listOfVehicles = character.vehicles;
+                    for (var j = 0; j < character.starships.length; j++) {
+                        var lastOne = (character.starships.length - 1);
+                        var listOfVehicles = character.starships;
                         $.getJSON(listOfVehicles[j], function(vehicle) {
-                            if (j == lastOne){
-                                console.log("changing the vehicles");
-                                tdShips.innerText += vehicle.name + ", ";
+                            if (j != lastOne) {
+                                tdShips.innerText += vehicle.name + ", " ;
                             } else {
-                                tdShips.innerText += vehicle.name + ",  ";
+                                tdShips.innerText += vehicle.name;
                             }
                         });
                     }
@@ -98,8 +97,6 @@
         }
 
     }
-
-    var square = function() {}
 
 
 })();
