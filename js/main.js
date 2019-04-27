@@ -6,11 +6,9 @@
     $(document).ready(init())
     
     function init() { 
-
         $.getJSON("https://swapi.co/api/films/", function(result) {
             main(result);
         });
-
     }
 
     var reload = 1;
@@ -23,16 +21,15 @@
             // console.log(this);
             populateTable(swapi, (this.getAttribute("id")));
         });
-
     }
 
     function populateDropdown(swapi) {
         $(".myMenu").empty();
         var goodResult = 0;
-        var dates = [];
+        var dates = []; // make an array of dates
         for (var j = 0; j < swapi.results.length; j++) {
             var date = swapi.results[j].release_date;
-            dates[j] = new Date(date);
+            dates[j] = new Date(date); // add all of the film release dates
         }
         var sortedDates = dates.sort(function(a, b) {
             return a.getTime() - b.getTime();
@@ -40,7 +37,6 @@
 
         while (dates.length > 0) {
             var minDate = sortedDates[0];
-            console.log(minDate);
             console.log(minDate.toDateString());
 
             for (var i = 0; i < swapi.results.length; i++) {
@@ -65,8 +61,7 @@
                     $(".myMenu").append(listItem);
                     goodResult++;
                     
-                }
-                    
+                }       
             }
             sortedDates.shift();
         } 
@@ -75,44 +70,52 @@
 
     function populateTable(swapi, index) {
 
-        $("tbody").empty(); // this will clear the table each time.
+        $("tbody").empty(); // clear the table each time.
 
-        for (var i = 0 ; i < swapi.results[index].characters.length; i++){ //global error for 'characters'. it cannot be found
+        for (var i = 0 ; i < swapi.results[index].characters.length; i++){ 
+
+            const xIcon = document.createElement('span');
+            xIcon.setAttribute("class", "glyphicon glyphicon-remove");
+            const a = document.createElement('a');
+            a.appendChild(xIcon);
+            console.log(a);
 
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
             const tdShips = document.createElement('td');
-            const a = document.createElement('a');
-            // a.setAttribute("href", "#");
-            const xIcon = document.createElement('span');
-            xIcon.setAttribute("class", "glyphicon glyphicon-remove");
 
             var listOfCharacters = swapi.results[index].characters;
             $.getJSON(listOfCharacters[i], function(character) {
-                tdName.innerText = character.name;
+                tdName.innerText = character.name + " ";
+                tdName.appendChild(a);
+
                 if (character.starships.length < 1) {
-                    tdShips.innerText = "None";
+                    tdShips.innerText = "none";
                     return;
                 } else {
-                    for (var j = 0; j < character.starships.length; j++) {
-                        var lastOne = (character.starships.length - 1);
-                        var listOfVehicles = character.starships;
-                        $.getJSON(listOfVehicles[j], function(vehicle) {
-                            if (j != lastOne) {
-                                tdShips.innerText += vehicle.name + ", " ;
-                            } else {
-                                tdShips.innerText += vehicle.name;
-                            }
-                        });
+                    var listOfVehicles = character.starships;
+                    var thisCharactersStartships = "";
+                    while (listOfVehicles.length > 0) {
+                        if (listOfVehicles[1]) {
+                            $.getJSON(listOfVehicles[0], function(vehicle) {
+                                thisCharactersStartships += vehicle.name + ", ";
+                                console.log(thisCharactersStartships);  
+                            });
+                        } else {
+                            $.getJSON(listOfVehicles[0], function(vehicle) {
+                                thisCharactersStartships += vehicle.name + " ";
+                                tdShips.innerText = thisCharactersStartships;
+                                console.log(thisCharactersStartships);  
+                            });
+                        }
+                        listOfVehicles.shift();
                     }
                 }
-                // tdName.appendChild(a.appendChild(xIcon));
             });
             
             tr.appendChild(tdName);
             tr.appendChild(tdShips);
             $("tbody").append(tr);
-
 
         }
 
