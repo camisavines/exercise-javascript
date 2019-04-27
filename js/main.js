@@ -29,28 +29,48 @@
     function populateDropdown(swapi) {
         $(".myMenu").empty();
         var goodResult = 0;
-        for (var i = 0; i < swapi.results.length; i++) {
-
-            //Make a quick reference to the current film
-            var film = swapi.results[i].title;
-
-            // Create 2 constants for the list item and the link inside
-            const listItem = document.createElement('li');
-            const link = document.createElement('a');
-
-            // Set the href to the index of the film in results to reference its characters later.
-            // Then set the li tag's inner text to the link
-            link.innerHTML = film;
-            link.setAttribute("href", "#");
-            listItem.setAttribute("id", i);
-            listItem.appendChild(link);
-
-            // Then put the line of code in the dropdown
-            $(".myMenu").append(listItem);
-            goodResult++;
+        var dates = [];
+        for (var j = 0; j < swapi.results.length; j++) {
+            var date = swapi.results[j].release_date;
+            dates[j] = new Date(date);
         }
+        var sortedDates = dates.sort(function(a, b) {
+            return a.getTime() - b.getTime();
+        })
 
-        // return 1;
+        while (dates.length > 0) {
+            var minDate = sortedDates[0];
+            console.log(minDate);
+            console.log(minDate.toDateString());
+
+            for (var i = 0; i < swapi.results.length; i++) {
+                if (minDate.toDateString() == new Date(swapi.results[i].release_date).toDateString()) {
+                    console.log("add " + swapi.results[i].title);
+
+                    //Make a quick reference to the current film
+                    var film = swapi.results[i].title;
+
+                    // Create 2 constants for the list item and the link inside
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+
+                    // Set the href to the index of the film in results to reference its characters later.
+                    // Then set the li tag's inner text to the link
+                    link.innerHTML = film;
+                    link.setAttribute("href", "#");
+                    listItem.setAttribute("id", i);
+                    listItem.appendChild(link);
+
+                    // Then put the line of code in the dropdown
+                    $(".myMenu").append(listItem);
+                    goodResult++;
+                    
+                }
+                    
+            }
+            sortedDates.shift();
+        } 
+
     }
 
     function populateTable(swapi, index) {
