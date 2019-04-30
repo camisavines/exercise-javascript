@@ -78,7 +78,7 @@
             xIcon.setAttribute("class", "glyphicon glyphicon-remove");
             const a = document.createElement('a');
             a.appendChild(xIcon);
-            console.log(a);
+            // console.log(a);
 
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
@@ -99,13 +99,13 @@
                         if (listOfVehicles[1]) {
                             $.getJSON(listOfVehicles[0], function(vehicle) {
                                 thisCharactersStartships += vehicle.name + ", ";
-                                console.log(thisCharactersStartships);  
+                                // console.log(thisCharactersStartships);  
                             });
                         } else {
                             $.getJSON(listOfVehicles[0], function(vehicle) {
                                 thisCharactersStartships += vehicle.name + " ";
                                 tdShips.innerText = thisCharactersStartships;
-                                console.log(thisCharactersStartships);  
+                                // console.log(thisCharactersStartships);  
                             });
                         }
                         listOfVehicles.shift();
