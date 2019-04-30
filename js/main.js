@@ -37,11 +37,11 @@
 
         while (dates.length > 0) {
             var minDate = sortedDates[0];
-            console.log(minDate.toDateString());
+            // console.log(minDate.toDateString());
 
             for (var i = 0; i < swapi.results.length; i++) {
                 if (minDate.toDateString() == new Date(swapi.results[i].release_date).toDateString()) {
-                    console.log("add " + swapi.results[i].title);
+                    // console.log("add " + swapi.results[i].title);
 
                     //Make a quick reference to the current film
                     var film = swapi.results[i].title;
